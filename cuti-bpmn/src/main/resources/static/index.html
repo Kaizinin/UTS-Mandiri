@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pengajuan Cuti - BPMN</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 760px; margin: 24px auto; padding: 0 16px; color: #222; }
+  h1 { font-size: 1.4rem; }
+  section { border: 1px solid #ccc; border-radius: 8px; padding: 14px 16px; margin: 16px 0; }
+  h2 { font-size: 1.05rem; margin-top: 0; }
+  label { display: block; margin: 8px 0 2px; font-size: .9rem; }
+  input { padding: 6px 8px; width: 100%; box-sizing: border-box; }
+  button { padding: 6px 14px; margin: 10px 6px 0 0; cursor: pointer; }
+  pre { background: #f4f4f4; padding: 10px; border-radius: 6px; white-space: pre-wrap; }
+  .tugas { border: 1px dashed #999; border-radius: 6px; padding: 8px 10px; margin: 8px 0; }
+</style>
+</head>
+<body>
+<h1>Pengajuan Cuti (BPMN + Spring Boot + Flowable)</h1>
+<p>Jatah cuti awal tiap pemohon: 12 hari.</p>
+
+<section>
+  <h2>1. Pemohon: ajukan cuti</h2>
+  <label>Nama</label><input id="nama" value="Budi">
+  <label>Jumlah hari</label><input id="hari" type="number" min="1" value="3">
+  <label>Alasan</label><input id="alasan" value="Acara keluarga">
+  <button onclick="ajukan()">Ajukan</button>
+  <pre id="hasilAjuan">Belum ada pengajuan.</pre>
+</section>
+
+<section>
+  <h2>2. Atasan: persetujuan (user task)</h2>
+  <button onclick="muatTugas()">Muat ulang daftar tugas</button>
+  <div id="daftar"></div>
+  <pre id="hasilKeputusan">-</pre>
+</section>
+
+<script>
+async function ajukan() {
+  const body = {
+    nama: document.getElementById('nama').value,
+    jumlahHari: Number(document.getElementById('hari').value),
+    alasan: document.getElementById('alasan').value
+  };
+  const res = await fetch('/api/cuti', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+  });
+  document.getElementById('hasilAjuan').textContent = JSON.stringify(await res.json(), null, 2);
+  muatTugas();
+}
+
+async function muatTugas() {
+  const res = await fetch('/api/tugas');
+  const data = await res.json();
+  const box = document.getElementById('daftar');
+  box.textContent = '';
+  if (data.length === 0) { box.textContent = 'Tidak ada tugas menunggu.'; return; }
+  data.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'tugas';
+    const info = document.createElement('div');
+    info.textContent = t.pemohon + ' meminta ' + t.jumlahHari + ' hari (sisa ' + t.sisaCuti + ') - ' + (t.alasan || '');
+    div.appendChild(info);
+    [['Setujui', true], ['Tolak', false]].forEach(([label, nilai]) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.onclick = () => putuskan(t.id, nilai);
+      div.appendChild(b);
+    });
+    box.appendChild(div);
+  });
+}
+
+async function putuskan(id, disetujui) {
+  const res = await fetch('/api/tugas/' + id + '/selesai?disetujui=' + disetujui, { method: 'POST' });
+  document.getElementById('hasilKeputusan').textContent = JSON.stringify(await res.json(), null, 2);
+  muatTugas();
+}
+
+muatTugas();
+</script>
+</body>
+</html>
