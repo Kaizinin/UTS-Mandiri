@@ -49,7 +49,7 @@ mvn spring-boot:run
 Hasil yang diharapkan di console:
 
 ```
->>> Hello World dari BPMN! Nama: Mahasiswa
+>>> Hello World
 >>> Proses dimulai, id = ...
 ```
 
