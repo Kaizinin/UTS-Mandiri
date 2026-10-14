@@ -2,8 +2,8 @@
 
 Tugas 3: membuat model proses bisnis dengan BPMN, lalu menjalankannya sebagai aplikasi Java.
 
-- **Nama / NIM:** (isi)
-- **Mata kuliah:** (isi)
+- **Nama / NIM:** Ryan Fazli Mawla/12409011010016
+- **Mata kuliah:** Rekayasa Perangkat Lunak Lanjut
 - **Tools:** Java, Maven, Spring Boot 3.4.x, Flowable 7.2.0, H2 (in-memory), bpmn.io (modeler)
 
 ## 1. Deskripsi use case
