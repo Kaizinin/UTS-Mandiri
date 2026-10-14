@@ -3,8 +3,8 @@
 Tugas 2: instalasi dan konfigurasi tools BPMN pada lingkungan Java/Jakarta,
 dibuktikan dengan proses *Hello World*.
 
-- **Nama / NIM:** (isi)
-- **Mata kuliah:** (isi)
+- **Nama / NIM:** Ryan Fazli Mawla/12409011010016
+- **Mata kuliah:** Rekayasa Perangkat Lunak Lanjut
 - **Tools:** Java, Maven, Spring Boot 3.4.x, Flowable 7.2.0 (engine BPMN), H2 (database in-memory), bpmn.io (modeler)
 
 ## 1. Prasyarat dan instalasi
